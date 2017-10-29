@@ -1,5 +1,5 @@
 {
-  "name": "dates-picker",
+  "name": "dates-picker-on-heroku",
   "version": "0.0.1",
   "description": "Dates Picker using React/Redux",
   "engines": {
