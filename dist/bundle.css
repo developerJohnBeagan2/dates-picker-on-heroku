@@ -5279,7 +5279,10 @@ button.toast-close-button {
   font-size: 1.1rem; }
 .app-form-label::first-letter {
   text-transform: uppercase; }
-/* get dates div/button -- */
+/*
+    Button to call Date Picker Modal
+        get dates div/button
+*/
 #idDatePicker {
   margin-top: 25px;
   margin-bottom: 25px; }
@@ -5288,14 +5291,20 @@ button.toast-close-button {
 /*
     Date Picker Modal
 */
-.modal-lg {
-  max-width: 80%; }
+/* select month */
+.dp-select-month {
+  font-size: 2rem;
+  margin-bottom: 10px; }
+.dp-select-month > .dp-previous-month {
+  margin-right: 20px; }
+.dp-select-month > .dp-next-month {
+  margin-left: 20px; }
 /* calendar table -- */
-#calendarTable > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+/* change padding for table appearance within modal */
+.dp-calendar-table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
   padding: 5px !important;
-  /* currently 8px */
-  /*background-color: pink;*/ }
-#calendarTable > thead > tr > th {
+  /* currently 8px */ }
+.dp-calendar-table > thead > tr > th {
   text-align: center; }
-.calendar-cell-button {
+.dp-calendar-cell-button {
   font-size: 1.1rem; }

@@ -53757,7 +53757,7 @@ var _DatesPickerModal = __webpack_require__(460);
 
 var _DatesPickerModal2 = _interopRequireDefault(_DatesPickerModal);
 
-var _toastr = __webpack_require__(463);
+var _toastr = __webpack_require__(464);
 
 var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -53807,7 +53807,7 @@ var SamplePage = function (_React$Component) {
   }, {
     key: 'showPickDates',
     value: function showPickDates(event) {
-      $('#pickDates').modal('show');
+      $('.dp-dates-pick').modal('show');
     }
   }, {
     key: 'render',
@@ -53839,16 +53839,11 @@ var SamplePage = function (_React$Component) {
         _react2.default.createElement(
           'h1',
           null,
-          'Form (Sample Page)'
+          'Form on Sample Page'
         ),
         _react2.default.createElement(
           'form',
           null,
-          _react2.default.createElement(
-            'h3',
-            null,
-            'inside form'
-          ),
           _react2.default.createElement(_DatesPickerModal2.default, null),
           _react2.default.createElement('br', null),
           firstTwoFields,
@@ -53857,7 +53852,8 @@ var SamplePage = function (_React$Component) {
             { id: 'idDatePicker' },
             _react2.default.createElement(
               'button',
-              { type: 'button', onClick: this.showPickDates, className: 'btn btn-outline-info app-button' },
+              { type: 'button', onClick: this.showPickDates,
+                className: 'btn btn-outline-info app-button' },
               'Pick Dates...'
             ),
             _react2.default.createElement('div', { id: 'idDatePickerSelection' })
@@ -54050,6 +54046,12 @@ var _CalendarTableRow = __webpack_require__(461);
 
 var _CalendarTableRow2 = _interopRequireDefault(_CalendarTableRow);
 
+var _HelperFunctions = __webpack_require__(463);
+
+var hf = _interopRequireWildcard(_HelperFunctions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -54066,29 +54068,61 @@ var DatesPickerModal = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (DatesPickerModal.__proto__ || Object.getPrototypeOf(DatesPickerModal)).call(this, props, context));
 
+    _this.state = {
+      calendarArray: []
+    };
+
     _this.saveDates = _this.saveDates.bind(_this);
+    _this.previousMonth = _this.previousMonth.bind(_this);
+    _this.nextMonth = _this.nextMonth.bind(_this);
 
     return _this;
   } // constructor
 
 
   _createClass(DatesPickerModal, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.setState({
+        calendarArray: hf.makeDateArray(new Date())
+      });
+    }
+  }, {
     key: 'saveDates',
     value: function saveDates(event) {
-      $('#pickDates').modal('hide');
+      $('.dp-dates-pick').modal('hide');
+    }
+  }, {
+    key: 'previousMonth',
+    value: function previousMonth(event) {
+      alert('previous month');
+    }
+  }, {
+    key: 'nextMonth',
+    value: function nextMonth(event) {
+      alert('next month');
     }
   }, {
     key: 'render',
     value: function render() {
 
       var tableRows = [];
+      var days = [];
       for (var i = 0; i <= 4; i++) {
-        tableRows.push(_react2.default.createElement(_CalendarTableRow2.default, { key: i }));
+        if (i != 4) {
+          days = this.state.calendarArray.slice(i * 7, i * 7 + 7);
+        } else {
+          days = this.state.calendarArray.slice(28);
+        }
+        //debugger;
+        tableRows.push(_react2.default.createElement(_CalendarTableRow2.default, { key: i, days: days }));
       }
 
       return _react2.default.createElement(
         'div',
-        { className: 'modal fade', id: 'pickDates', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'pickDatesLabel', 'aria-hidden': 'true' },
+        { className: 'modal fade dp-dates-pick',
+          tabIndex: '-1', role: 'dialog', 'aria-hidden': 'true'
+        },
         _react2.default.createElement(
           'div',
           { className: 'modal-dialog', role: 'document' },
@@ -54100,7 +54134,7 @@ var DatesPickerModal = function (_React$Component) {
               { className: 'modal-header' },
               _react2.default.createElement(
                 'h5',
-                { className: 'modal-title', id: 'pickDatesLabel' },
+                { className: 'modal-title text-info' },
                 'Pick Dates'
               ),
               _react2.default.createElement(
@@ -54117,23 +54151,35 @@ var DatesPickerModal = function (_React$Component) {
               'div',
               { className: 'modal-body' },
               _react2.default.createElement(
-                'button',
-                { type: 'button', 'aria-label': 'Left month', className: 'btn' },
-                _react2.default.createElement('i', { 'aria-hidden': 'true', className: 'far fa-angle-left' })
-              ),
-              _react2.default.createElement(
-                'span',
-                { id: 'idMonthName' },
-                'October'
-              ),
-              _react2.default.createElement(
-                'button',
-                { type: 'button', 'aria-label': 'Right month', className: 'btn' },
-                _react2.default.createElement('i', { 'aria-hidden': 'true', className: 'far fa-angle-right' })
+                'div',
+                { className: 'dp-select-month' },
+                _react2.default.createElement(
+                  'button',
+                  {
+                    type: 'button', 'aria-label': 'Left month',
+                    className: 'btn dp-previous-month',
+                    onClick: this.previousMonth
+                  },
+                  _react2.default.createElement('i', { 'aria-hidden': 'true', className: 'far fa-angle-left' })
+                ),
+                _react2.default.createElement(
+                  'span',
+                  { className: 'dp-month-name' },
+                  'October'
+                ),
+                _react2.default.createElement(
+                  'button',
+                  {
+                    type: 'button', 'aria-label': 'Right month',
+                    className: 'btn dp-next-month',
+                    onClick: this.nextMonth
+                  },
+                  _react2.default.createElement('i', { 'aria-hidden': 'true', className: 'far fa-angle-right' })
+                )
               ),
               _react2.default.createElement(
                 'table',
-                { id: 'calendarTable', className: 'table table-bordered' },
+                { id: 'calendarTable', className: 'table table-bordered dp-calendar-table' },
                 _react2.default.createElement(
                   'thead',
                   null,
@@ -54208,7 +54254,7 @@ var DatesPickerModal = function (_React$Component) {
 }(_react2.default.Component);
 
 DatesPickerModal.propTypes = {
-  children: _propTypes2.default.node
+  //children: PropTypes.node
 };
 
 exports.default = DatesPickerModal;
@@ -54241,11 +54287,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import {Link} from 'react-router-dom';
 
-var CalendarTableRow = function CalendarTableRow() {
+var CalendarTableRow = function CalendarTableRow(_ref) {
+  var days = _ref.days;
 
+
+  //debugger;
+
+
+  var day = 0;
   var tableCells = [];
   for (var i = 0; i <= 6; i++) {
-    tableCells.push(_react2.default.createElement(_CalendarTableCell2.default, { key: i }));
+    day = days[i];
+    tableCells.push(_react2.default.createElement(_CalendarTableCell2.default, { key: i, day: day }));
   }
 
   return _react2.default.createElement(
@@ -54282,15 +54335,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import {Link} from 'react-router-dom';
 
-var CalendarTableCell = function CalendarTableCell() {
+var CalendarTableCell = function CalendarTableCell(_ref) {
+  var day = _ref.day;
+
+  /*
+      button link number
+      cell attributes
+        background color
+        display # yes/no
+        link active/inactive
+  */
+
+  //debugger;
+
+  var buttonText = "";
+  if (day > 0) {
+    buttonText = day.toString();
+  }
 
   return _react2.default.createElement(
     'td',
-    { className: 'calendar-cell' },
+    null,
     _react2.default.createElement(
       'button',
-      { type: 'button', className: 'btn btn-link calendar-cell-button' },
-      '00'
+      { type: 'button', className: 'btn btn-link dp-calendar-cell-button' },
+      buttonText
     )
   );
 };
@@ -54301,6 +54370,54 @@ exports.default = CalendarTableCell;
 
 /***/ }),
 /* 463 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.makeDateArray = makeDateArray;
+exports.calcFirstDateofMonth = calcFirstDateofMonth;
+exports.calcLastDateofMonth = calcLastDateofMonth;
+function makeDateArray(calendarDate) {
+    var dateArray = Array(35);
+    dateArray.fill(0);
+    var firstofMonth = calcFirstDateofMonth(calendarDate);
+    var lastofMonth = calcLastDateofMonth(calendarDate);
+    var offset = firstofMonth.getDay(); // day of week
+    var dayNumber = lastofMonth.getDate(); // day of month
+    for (var i = 1; i <= dayNumber; i++) {
+        dateArray[offset + i - 1] = i;
+    }
+    //debugger;
+    return dateArray;
+}
+
+function calcFirstDateofMonth(calendarDate) {
+    var firstofMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+    return firstofMonth;
+}
+
+function calcLastDateofMonth(calendarDate) {
+    var yearNum = calendarDate.getFullYear();
+    var monthNum = calendarDate.getMonth();
+    if (monthNum >= 0 && monthNum <= 10) {
+        monthNum++;
+    } else {
+        monthNum = 0;
+        yearNum++;
+    }
+    // first day of next month
+    var firstofNext = new Date(yearNum, monthNum, 1);
+    // call last day of this month
+    var lastofMonth = new Date(firstofNext.setDate(firstofNext.getDate() - 1));
+    return lastofMonth;
+}
+
+/***/ }),
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -54732,11 +54849,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
         })();
     }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}(__webpack_require__(464)));
+}(__webpack_require__(465)));
 
 
 /***/ }),
-/* 464 */
+/* 465 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
