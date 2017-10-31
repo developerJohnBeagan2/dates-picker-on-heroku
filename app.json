@@ -1,7 +1,7 @@
 {
   "name": "Dates Picker on Heroku: Node.js",
   "description": "",
-  "repository": "https://github.com/deverloperJohnBeagan2/dates-picker-on-heroku",
+  "repository": "https://github.com/developerJohnBeagan2/dates-picker-on-heroku",
   "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
   "keywords": ["node", "express", "heroku"],
   "image": "heroku/nodejs"
