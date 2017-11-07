@@ -17302,9 +17302,10 @@ var isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.getMonthName = getMonthName;
+exports.getDayNames = getDayNames;
 exports.makeDateArray = makeDateArray;
 exports.calcFirstDateofMonth = calcFirstDateofMonth;
 exports.calcLastDateofMonth = calcLastDateofMonth;
@@ -17312,55 +17313,73 @@ exports.makeSelectedDateObject = makeSelectedDateObject;
 exports.formatDateObject = formatDateObject;
 var monthNames = exports.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+var dayNames = exports.dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 function getMonthName(calendarDate) {
-    return monthNames[calendarDate.getMonth()];
+  var calendarSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "large";
+
+  if (calendarSize == "large") return monthNames[calendarDate.getMonth()];else return monthNames[calendarDate.getMonth()].substring(0, 3);
+}
+
+function getDayNames() {
+  var calendarSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "large";
+
+  if (calendarSize == "large") {
+    return dayNames;
+  } else {
+    var short = [];
+    dayNames.forEach(function (d) {
+      return short.push(d.substring(0, 1));
+    });
+    return short;
+  }
 }
 
 function makeDateArray(calendarDate) {
-    var dateArray = Array(35);
-    dateArray.fill(0);
-    var firstofMonth = calcFirstDateofMonth(calendarDate);
-    var lastofMonth = calcLastDateofMonth(calendarDate);
-    var offset = firstofMonth.getDay(); // day of week
-    var dayNumber = lastofMonth.getDate(); // day of month
-    for (var i = 1; i <= dayNumber; i++) {
-        dateArray[offset + i - 1] = i;
-    }
-    return dateArray;
+  var dateArray = Array(35);
+  dateArray.fill(0);
+  var firstofMonth = calcFirstDateofMonth(calendarDate);
+  var lastofMonth = calcLastDateofMonth(calendarDate);
+  var offset = firstofMonth.getDay(); // day of week
+  var dayNumber = lastofMonth.getDate(); // day of month
+  for (var i = 1; i <= dayNumber; i++) {
+    dateArray[offset + i - 1] = i;
+  }
+  return dateArray;
 }
 
 function calcFirstDateofMonth(calendarDate) {
-    var firstofMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
-    return firstofMonth;
+  var firstofMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+  return firstofMonth;
 }
 
 function calcLastDateofMonth(calendarDate) {
-    var yearNum = calendarDate.getFullYear();
-    var monthNum = calendarDate.getMonth();
-    if (monthNum >= 0 && monthNum <= 10) {
-        monthNum++;
-    } else {
-        monthNum = 0;
-        yearNum++;
-    }
-    // first day of next month
-    var firstofNext = new Date(yearNum, monthNum, 1);
-    // last day of this month
-    var lastofMonth = new Date(firstofNext.setDate(firstofNext.getDate() - 1));
-    return lastofMonth;
+  var yearNum = calendarDate.getFullYear();
+  var monthNum = calendarDate.getMonth();
+  if (monthNum >= 0 && monthNum <= 10) {
+    monthNum++;
+  } else {
+    monthNum = 0;
+    yearNum++;
+  }
+  // first day of next month
+  var firstofNext = new Date(yearNum, monthNum, 1);
+  // last day of this month
+  var lastofMonth = new Date(firstofNext.setDate(firstofNext.getDate() - 1));
+  return lastofMonth;
 }
 
 function makeSelectedDateObject(currentDate, dayNum) {
-    var yearNum = currentDate.getFullYear();
-    var monthNum = currentDate.getMonth();
-    var dateIndex = yearNum * 10000 + monthNum * 100 + dayNum;
-    return { id: dateIndex, year: yearNum, month: monthNum, day: dayNum };
+  var yearNum = currentDate.getFullYear();
+  var monthNum = currentDate.getMonth();
+  var dateIndex = yearNum * 10000 + monthNum * 100 + dayNum;
+  return { id: dateIndex, year: yearNum, month: monthNum, day: dayNum };
 }
 
 function formatDateObject(dateObject) {
-    var date = new Date(dateObject.year, dateObject.month, dateObject.day);
-    var formattedDate = date.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
-    return formattedDate;
+  var date = new Date(dateObject.year, dateObject.month, dateObject.day);
+  var formattedDate = date.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
+  return formattedDate;
 }
 
 /***/ }),
@@ -53429,8 +53448,6 @@ function datesPicked() {
   var action = arguments[1];
 
 
-  //debugger;
-
   switch (action.type) {
 
     case types.UPDATE_DATES_PICKED_SUCCESS:
@@ -53769,7 +53786,7 @@ var App = function App() {
             _react2.default.createElement(
                 'p',
                 { className: 'lead' },
-                'When a user needs to pick several dates, and a larger control is needed.'
+                'When a user must to pick several dates, and a larger control is needed.'
             )
         ),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _SamplePage2.default })
@@ -53848,7 +53865,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-//
 var SamplePage = function (_React$Component) {
   _inherits(SamplePage, _React$Component);
 
@@ -53868,14 +53884,12 @@ var SamplePage = function (_React$Component) {
     _this.savePickedDates = _this.savePickedDates.bind(_this);
 
     return _this;
-  } // constructor
+  } // end constructor
 
   _createClass(SamplePage, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      //debugger;
       if (this.props.datesPicked != nextProps.datesPicked) {
-        // Necessary to populate form when existing course is loaded directly.
         this.setState({ datesPicked: Object.assign([], nextProps.datesPicked) });
       }
     }
@@ -53964,7 +53978,7 @@ var SamplePage = function (_React$Component) {
             null,
             _react2.default.createElement(
               'ul',
-              { style: { listStyle: 'none' } },
+              { className: 'dp-selected-list', style: { listStyle: 'none' } },
               selectedList
             )
           ),
@@ -54186,7 +54200,10 @@ var DatesPickerModal = function (_React$Component) {
       calendarArray: [],
       currentDate: new Date(),
       monthName: "",
-      selectedDates: []
+      selectedDates: [],
+      calendarMaxWidth: 0,
+      calendarSize: "",
+      daysofWeek: []
     };
 
     _this.saveDates = _this.saveDates.bind(_this);
@@ -54194,6 +54211,8 @@ var DatesPickerModal = function (_React$Component) {
     _this.nextMonth = _this.nextMonth.bind(_this);
     _this.selectDate = _this.selectDate.bind(_this);
     _this.removeDate = _this.removeDate.bind(_this);
+    _this.getWindowWidth = _this.getWindowWidth.bind(_this);
+    _this.windowResize = _this.windowResize.bind(_this);
 
     return _this;
   } // constructor
@@ -54203,11 +54222,59 @@ var DatesPickerModal = function (_React$Component) {
     key: 'componentWillMount',
     value: function componentWillMount() {
       var currentDate = hf.calcFirstDateofMonth(new Date());
+      var calendarMaxWidth = 433;
+      var calendarSize = "large";
+      if (this.getWindowWidth() <= calendarMaxWidth) {
+        calendarSize = "small";
+      }
       this.setState({
         currentDate: currentDate,
         calendarArray: hf.makeDateArray(currentDate),
-        monthName: hf.getMonthName(currentDate)
+        monthName: hf.getMonthName(currentDate, calendarSize),
+        daysofWeek: hf.getDayNames(calendarSize),
+        calendarMaxWidth: calendarMaxWidth,
+        calendarSize: calendarSize
       });
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener("resize", this.windowResize);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener("resize", this.windowResize);
+    }
+  }, {
+    key: 'getWindowWidth',
+    value: function getWindowWidth() {
+      return $('body').outerWidth(true);
+    }
+  }, {
+    key: 'windowResize',
+    value: function windowResize() {
+      /*
+          ### to remove jQuery, try turning calendar table into component.
+              and see if toggle small/large class works
+      */
+      var width = this.getWindowWidth();
+      if (width <= this.state.calendarMaxWidth && this.state.calendarSize != "small") {
+        this.setState({
+          calendarSize: "small",
+          monthName: hf.getMonthName(this.state.currentDate, "small"),
+          daysofWeek: hf.getDayNames("small")
+        });
+        //$("#dpCalendarTable").removeClass().addClass("dp-calendar-table");
+      }
+      if (width > this.state.calendarMaxWidth && this.state.calendarSize != "large") {
+        this.setState({
+          calendarSize: "large",
+          monthName: hf.getMonthName(this.state.currentDate, "large"),
+          daysofWeek: hf.getDayNames("large")
+        });
+        //$("#dpCalendarTable").removeClass().addClass("table table-bordered dp-calendar-table");
+      }
     }
   }, {
     key: 'selectDate',
@@ -54248,7 +54315,7 @@ var DatesPickerModal = function (_React$Component) {
       this.setState({
         currentDate: newDate,
         calendarArray: hf.makeDateArray(newDate),
-        monthName: hf.getMonthName(newDate)
+        monthName: hf.getMonthName(newDate, this.state.calendarSize)
       });
     }
   }, {
@@ -54260,7 +54327,7 @@ var DatesPickerModal = function (_React$Component) {
       this.setState({
         currentDate: newDate,
         calendarArray: hf.makeDateArray(newDate),
-        monthName: hf.getMonthName(newDate)
+        monthName: hf.getMonthName(newDate, this.state.calendarSize)
       });
     }
   }, {
@@ -54327,7 +54394,7 @@ var DatesPickerModal = function (_React$Component) {
                 { className: 'dp-select-month' },
                 _react2.default.createElement(
                   'table',
-                  { className: 'table table-responsive-sm dp-select-month-table' },
+                  { className: 'table dp-select-month-table' },
                   _react2.default.createElement(
                     'tbody',
                     null,
@@ -54386,7 +54453,7 @@ var DatesPickerModal = function (_React$Component) {
               ),
               _react2.default.createElement(
                 'table',
-                { className: 'table table-bordered table-responsive-sm dp-calendar-table' },
+                { id: 'dpCalendarTable', className: 'table table-bordered dp-calendar-table' },
                 _react2.default.createElement(
                   'thead',
                   null,
@@ -54396,37 +54463,37 @@ var DatesPickerModal = function (_React$Component) {
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Sun'
+                      this.state.daysofWeek[0]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Mon'
+                      this.state.daysofWeek[1]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Tue'
+                      this.state.daysofWeek[2]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Wed'
+                      this.state.daysofWeek[3]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Thu'
+                      this.state.daysofWeek[4]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Fri'
+                      this.state.daysofWeek[5]
                     ),
                     _react2.default.createElement(
                       'th',
                       null,
-                      'Sat'
+                      this.state.daysofWeek[6]
                     )
                   )
                 ),
