@@ -14696,9 +14696,10 @@ exports.calcLastDateofMonth = calcLastDateofMonth;
 exports.makeSelectedDateObject = makeSelectedDateObject;
 exports.formatDateObject = formatDateObject;
 exports.calcThisCellDate = calcThisCellDate;
-var monthNames = exports.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-var dayNames = exports.dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function getMonthName(calendarDate) {
   var calendarSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "large";
@@ -14734,6 +14735,7 @@ function makeDateArray(calendarDate) {
   for (var i = 1; i <= dayNumber; i++) {
     dateArray[offset + i - 1] = i;
   }
+
   return dateArray;
 }
 
@@ -53390,6 +53392,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // ?
 function configureStore(initialState) {
+
   return (0, _redux.createStore)(_reducers2.default, initialState, (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxImmutableStateInvariant2.default)()));
 }
 
@@ -53954,6 +53957,8 @@ var SamplePage = exports.SamplePage = function (_React$Component) {
         });
       }
 
+      var today = new Date();
+
       return _react2.default.createElement(
         'div',
         null,
@@ -53965,7 +53970,7 @@ var SamplePage = exports.SamplePage = function (_React$Component) {
         _react2.default.createElement(
           'form',
           null,
-          _react2.default.createElement(_DatesPickerModal2.default, { savePickedDates: this.savePickedDates }),
+          _react2.default.createElement(_DatesPickerModal2.default, { savePickedDates: this.savePickedDates, today: today }),
           _react2.default.createElement('br', null),
           firstTwoFields,
           _react2.default.createElement(
@@ -54097,11 +54102,6 @@ TextInput.propTypes = {
 
 exports.default = TextInput;
 
-/*
-    <div >{name}</div>
-
-*/
-
 /***/ }),
 /* 460 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -54202,7 +54202,7 @@ var DatesPickerModal = exports.DatesPickerModal = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (DatesPickerModal.__proto__ || Object.getPrototypeOf(DatesPickerModal)).call(this, props, context));
 
-    var currentDate = hf.calcFirstDateofMonth(new Date());
+    var currentDate = hf.calcFirstDateofMonth(_this.props.today);
     var calendarMaxWidth = 433;
     var calendarSize = "large";
     if ($('body').outerWidth(true) <= calendarMaxWidth) {
@@ -54417,11 +54417,7 @@ var DatesPickerModal = exports.DatesPickerModal = function (_React$Component) {
                           'span',
                           { className: 'dp-month-name' },
                           this.state.monthName
-                        )
-                      ),
-                      _react2.default.createElement(
-                        'td',
-                        null,
+                        ),
                         _react2.default.createElement(
                           'span',
                           { className: 'dp-year text-muted' },
@@ -54532,7 +54528,8 @@ var DatesPickerModal = exports.DatesPickerModal = function (_React$Component) {
 }(_react2.default.Component);
 
 DatesPickerModal.propTypes = {
-  savePickedDates: _propTypes2.default.func.isRequired
+  savePickedDates: _propTypes2.default.func.isRequired,
+  today: _propTypes2.default.instanceOf(Date)
 };
 
 exports.default = DatesPickerModal;
@@ -54563,26 +54560,18 @@ var _CalendarTableCell2 = _interopRequireDefault(_CalendarTableCell);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import {Link} from 'react-router-dom';
-
-//const CalendarTableRow = ({days, someFunctionName}) => {
 var CalendarTableRow = function CalendarTableRow(_ref) {
   var days = _ref.days,
       selectDate = _ref.selectDate,
       currentMonthDate = _ref.currentMonthDate;
 
 
-  var day = 0;
-  var tableCells = [];
-  for (var i = 0; i <= 6; i++) {
-    day = days[i];
-    tableCells.push(_react2.default.createElement(_CalendarTableCell2.default, { key: i, day: day, selectDate: selectDate, currentMonthDate: currentMonthDate }));
-  }
-
   return _react2.default.createElement(
     'tr',
     null,
-    tableCells
+    [0, 1, 2, 3, 4, 5, 6].map(function (i) {
+      return _react2.default.createElement(_CalendarTableCell2.default, { key: i, day: days[i], selectDate: selectDate, currentMonthDate: currentMonthDate });
+    })
   );
 };
 
